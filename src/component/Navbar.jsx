@@ -1,11 +1,14 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 const Navbar = () => {
   return (
     <div>
       <div className="navbar bg-base-100 shadow-md">
         <div className="flex-1">
-          <a className="btn btn-ghost text-xl">daisyUI</a>
+          <Link to={"/"}>
+            <a className="btn btn-ghost text-xl">Home</a>
+          </Link>
         </div>
         <div className="flex-none gap-2">
           <div className="form-control">

@@ -1,12 +1,16 @@
 import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
 const Home = () => {
+  const [searchQuery, setSearchQuery] = useState("");
   const [users, setUsers] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch("https://dummyjson.com/users");
+        const response = await fetch(
+          `https://dummyjson.com/users?name=${searchQuery}`
+        );
         if (!response.ok) {
           throw new Error("Network response was not ok");
         }
@@ -18,9 +22,8 @@ const Home = () => {
     };
 
     fetchData();
-  }, []);
+  }, [searchQuery]);
 
-  console.log(users);
   return (
     <div className="p-2">
       <section className="py-20 container mx-auto">
@@ -28,13 +31,13 @@ const Home = () => {
           <div className="w-full px-4">
             <div className="mx-auto mb-12 max-w-[510px] text-center lg:mb-20">
               <h2 className="mb-4 text-3xl font-bold text-dark sm:text-4xl md:text-[40px]">
-                Our Services
+                Profiles Here
               </h2>
-              <p className="text-base text-body-color">
+              {/* <p className="text-base text-body-color">
                 A Phone service offer generally refers to the products or
                 services offered by a company or organization in the context of
                 Mobile. These services may include
-              </p>
+              </p> */}
             </div>
           </div>
         </div>
@@ -59,8 +62,8 @@ const Home = () => {
             type="search"
             name="Search"
             placeholder="Search..."
-            // value={searchQuery}
-            // onChange={(e) => setSearchQuery(e.target.value)}
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
             className="w-32 py-2 pl-10 text-sm rounded-md sm:w-auto focus:outline-none border border-black text-black"
           />
         </div>
@@ -103,8 +106,9 @@ const Home = () => {
                 <div className="flex justify-center absolute bottom-0 left-0 w-full h-0 flex-col  items-center opacity-0 group-hover:h-full group-hover:opacity-90 duration-1000">
                   <div className="flex gap-2 justify-center items-center">
                     <button className="w-52 h-10 font-semibold bg-black rounded-2xl text-white hover:bg-white hover:text-black hover:shadow-lg">
-                      See more...
-                      {/* <BiSolidCartAdd className="text-2xl ml-2 -mt-6" /> */}
+                      <Link to={`/details/${service?.id}`} className="">
+                        Read more ...
+                      </Link>
                     </button>
                   </div>
                 </div>
