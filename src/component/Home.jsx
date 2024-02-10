@@ -5,7 +5,7 @@ const Home = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [users, setUsers] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-
+  const [sortBy, setSortBy] = useState("selected");
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -20,16 +20,37 @@ const Home = () => {
         }
 
         const data = await response.json();
-        setUsers(data); // assuming the API response is an array of users
+        setUsers(data);
       } catch (error) {
         console.error("Error fetching data:", error);
       } finally {
-        setIsLoading(false); // Set loading to false after the request, whether it was successful or not
+        setIsLoading(false);
       }
     };
 
     fetchData();
   }, [searchQuery]);
+
+  const sortUsers = (sortBy) => {
+    let sortedUsers = [...users.users];
+    if (sortBy === "firstName") {
+      sortedUsers = sortedUsers.sort((a, b) =>
+        a.firstName.localeCompare(b.firstName)
+      );
+    } else if (sortBy === "email") {
+      sortedUsers = sortedUsers.sort((a, b) => a.email.localeCompare(b.email));
+    } else if (sortBy === "companyName") {
+      sortedUsers = sortedUsers.sort((a, b) =>
+        a.company.name.localeCompare(b.company.name)
+      );
+    }
+    setUsers({ ...users, users: sortedUsers }); // Update state with the new sorted array
+  };
+
+  const handleSortChange = (event) => {
+    setSortBy(event.target.value);
+    sortUsers(event.target.value);
+  };
 
   return (
     <div className="p-2">
@@ -49,30 +70,45 @@ const Home = () => {
           </div>
         </div>
         {/*  */}
-        <div className="relative my-6">
-          <span className="absolute inset-y-0 left-0 flex items-center pl-2 ">
-            <button
-              type="submit"
-              title="Search"
-              className="p-1 focus:outline-none focus:ring"
-            >
-              <svg
-                fill="currentColor"
-                viewBox="0 0 512 512"
-                className="w-4 h-4 text-black"
+        <div className="flex justify-between">
+          <div className="relative my-6">
+            <span className="absolute inset-y-0 left-0 flex items-center pl-2 ">
+              <button
+                type="submit"
+                title="Search"
+                className="p-1 focus:outline-none focus:ring"
               >
-                <path d="M479.6,399.716l-81.084-81.084-62.368-25.767A175.014,175.014,0,0,0,368,192c0-97.047-78.953-176-176-176S16,94.953,16,192,94.953,368,192,368a175.034,175.034,0,0,0,101.619-32.377l25.7,62.2L400.4,478.911a56,56,0,1,0,79.2-79.195ZM48,192c0-79.4,64.6-144,144-144s144,64.6,144,144S271.4,336,192,336,48,271.4,48,192ZM456.971,456.284a24.028,24.028,0,0,1-33.942,0l-76.572-76.572-23.894-57.835L380.4,345.771l76.573,76.572A24.028,24.028,0,0,1,456.971,456.284Z"></path>
-              </svg>
-            </button>
-          </span>
-          <input
-            type="search"
-            name="Search"
-            placeholder="Search..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-32 py-2 pl-10 text-sm rounded-md sm:w-auto focus:outline-none border border-black text-black"
-          />
+                <svg
+                  fill="currentColor"
+                  viewBox="0 0 512 512"
+                  className="w-4 h-4 text-black"
+                >
+                  <path d="M479.6,399.716l-81.084-81.084-62.368-25.767A175.014,175.014,0,0,0,368,192c0-97.047-78.953-176-176-176S16,94.953,16,192,94.953,368,192,368a175.034,175.034,0,0,0,101.619-32.377l25.7,62.2L400.4,478.911a56,56,0,1,0,79.2-79.195ZM48,192c0-79.4,64.6-144,144-144s144,64.6,144,144S271.4,336,192,336,48,271.4,48,192ZM456.971,456.284a24.028,24.028,0,0,1-33.942,0l-76.572-76.572-23.894-57.835L380.4,345.771l76.573,76.572A24.028,24.028,0,0,1,456.971,456.284Z"></path>
+                </svg>
+              </button>
+            </span>
+            <input
+              type="search"
+              name="Search"
+              placeholder="Search..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-32 py-2 pl-10 text-sm rounded-md sm:w-auto focus:outline-none border border-black text-black"
+            />
+          </div>
+          {/*  */}
+
+          <select
+            id="sortBy"
+            value={sortBy}
+            onChange={handleSortChange}
+            className="select select-bordered w-full max-w-xs"
+          >
+            <option selected>Select</option>
+            <option value="firstName">Name</option>
+            <option value="email">Email</option>
+            <option value="companyName">Company Name</option>
+          </select>
         </div>
         {/*  */}
         {isLoading && <p className="text-center text-2xl">Loading...</p>}
@@ -93,7 +129,7 @@ const Home = () => {
                     {service?.name}
                   </h2>
                   <p className="text-black font-semibold">{service?.details}</p>
-                  <p className="text-black font-semibold">
+                  <p className="text-black font-semibold text-lg">
                     <Link to={`/details/${service?.id}`}>
                       name : {service?.firstName + service?.lastName}
                     </Link>
