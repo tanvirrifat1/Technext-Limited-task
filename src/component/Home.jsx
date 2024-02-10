@@ -4,20 +4,27 @@ import { Link } from "react-router-dom";
 const Home = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [users, setUsers] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
+        setIsLoading(true);
+
         const response = await fetch(
-          `https://dummyjson.com/users?name=${searchQuery}`
+          `https://dummyjson.com/users/search?q=${searchQuery}`
         );
+
         if (!response.ok) {
           throw new Error("Network response was not ok");
         }
+
         const data = await response.json();
         setUsers(data); // assuming the API response is an array of users
       } catch (error) {
         console.error("Error fetching data:", error);
+      } finally {
+        setIsLoading(false); // Set loading to false after the request, whether it was successful or not
       }
     };
 
@@ -68,6 +75,7 @@ const Home = () => {
           />
         </div>
         {/*  */}
+        {isLoading && <p className="text-center text-2xl">Loading...</p>}
         <div className="w-full container mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4  gap-4">
           {users?.users?.map((service) => (
             <div
@@ -86,7 +94,9 @@ const Home = () => {
                   </h2>
                   <p className="text-black font-semibold">{service?.details}</p>
                   <p className="text-black font-semibold">
-                    name : {service?.firstName + service?.lastName}
+                    <Link to={`/details/${service?.id}`}>
+                      name : {service?.firstName + service?.lastName}
+                    </Link>
                   </p>
                   <p className="text-black font-semibold">
                     email : {service?.email}
@@ -102,7 +112,7 @@ const Home = () => {
                     company : {service?.company?.name}
                   </p>
                 </div>
-
+                {/* 
                 <div className="flex justify-center absolute bottom-0 left-0 w-full h-0 flex-col  items-center opacity-0 group-hover:h-full group-hover:opacity-90 duration-1000">
                   <div className="flex gap-2 justify-center items-center">
                     <button className="w-52 h-10 font-semibold bg-black rounded-2xl text-white hover:bg-white hover:text-black hover:shadow-lg">
@@ -111,7 +121,7 @@ const Home = () => {
                       </Link>
                     </button>
                   </div>
-                </div>
+                </div> */}
               </div>
             </div>
           ))}

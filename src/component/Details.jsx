@@ -3,12 +3,13 @@ import { useParams } from "react-router-dom";
 
 const Details = () => {
   const { id } = useParams();
-
   const [users, setUsers] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
+        setIsLoading(true);
         const response = await fetch(`https://dummyjson.com/users/${id}`);
         if (!response.ok) {
           throw new Error("Network response was not ok");
@@ -17,6 +18,8 @@ const Details = () => {
         setUsers(data); // assuming the API response is an array of users
       } catch (error) {
         console.error("Error fetching data:", error);
+      } finally {
+        setIsLoading(false);
       }
     };
 
@@ -36,7 +39,6 @@ const Details = () => {
               className="object-cover object-center w-full rounded-t-md  dark-bg-gray-500"
             />
           </div>
-
           <div className="space-y-2">
             <h1 className="flex">
               <strong className="w-[115px]">Name</strong>{" "}
