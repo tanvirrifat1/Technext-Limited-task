@@ -26,8 +26,6 @@ const Details = () => {
     fetchData();
   }, [id]);
 
-  console.log(users);
-
   return (
     <div>
       <div className="min-h-[85vh]">
