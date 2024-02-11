@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
+
 import Swal from "sweetalert2";
 
 const User = () => {
@@ -68,9 +68,6 @@ const User = () => {
       imageUrl,
     };
 
-    // Display the booking data in the console
-    console.log(booking);
-
     if (parsedData) {
       localStorage.setItem("booking", JSON.stringify([...parsedData, booking]));
     } else {
@@ -78,14 +75,6 @@ const User = () => {
     }
     Swal.fire("User added successfully!");
     navigate("/");
-
-    // if (booking) {
-    //   localStorage.setItem("booking", JSON.stringify(booking));
-    //   Swal.fire("user added!");
-    // } else {
-    //   localStorage.setItem("booking", JSON.stringify(booking));
-    // }
-    // navigate("/");
   };
 
   return (
@@ -179,17 +168,6 @@ const User = () => {
                 />
               </div>
 
-              {/* <div className="form-control">
-                <label className="label">
-                  <span className="label-text">Task description</span>
-                </label>
-                <textarea
-                  name="description"
-                  className="textarea textarea-bordered"
-                  placeholder="description"
-                  required
-                ></textarea>
-              </div> */}
               <div type="submit" className="form-control mt-6">
                 <button className="btn btn-outline">Submit</button>
               </div>

@@ -15,7 +15,7 @@ const Details = () => {
           throw new Error("Network response was not ok");
         }
         const data = await response.json();
-        setUsers(data); // assuming the API response is an array of users
+        setUsers(data);
       } catch (error) {
         console.error("Error fetching data:", error);
       } finally {
@@ -25,6 +25,10 @@ const Details = () => {
 
     fetchData();
   }, [id]);
+
+  if (isLoading) {
+    return <p className="text-center items-center mt-10 text-2xl">Loading</p>;
+  }
 
   return (
     <div>
@@ -54,6 +58,14 @@ const Details = () => {
             <h1 className="flex">
               <strong className="w-[115px]">CompanyName</strong>{" "}
               <span>: {users?.company?.name}</span>
+            </h1>
+            <h1 className="flex">
+              <strong className="w-[115px]">City</strong>{" "}
+              <span>: {users?.address?.city}</span>
+            </h1>
+            <h1 className="flex">
+              <strong className="w-[115px]">Gender</strong>{" "}
+              <span>: {users?.gender}</span>
             </h1>
           </div>
         </div>
